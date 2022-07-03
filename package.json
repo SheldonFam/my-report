@@ -1,0 +1,28 @@
+{
+  "name": "report-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SheldonFam/my-report-.git"
+  },
+  "author": "Sheldon Fam",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SheldonFam/my-report-/issues"
+  },
+  "homepage": "https://github.com/SheldonFam/my-report-#readme",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "mongoose": "^6.4.0",
+    "node-fetch": "^3.2.6",
+    "nodemon": "^2.0.16"
+  }
+}
