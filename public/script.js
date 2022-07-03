@@ -1,3 +1,48 @@
+//Api Calls
+const url = "/api/report";
+
+const reportApi = {
+  getReports: () => {
+    return fetch(url).then((res) => res.json());
+  },
+  addReport: (reportData) => {
+    return fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(reportData),
+    }).then((res) => res.json());
+  },
+};
+
+//Data-> Show UI
+const ui = {
+  renderReports: (reports) => {
+    tasksList.innerHTML = "";
+    reports.forEach((report) => {
+      tasksList.innerHTML += `
+     <div id=${report._id}>
+          <span class="fw-bold">${report.reportNo}</span>
+          <span class="small text-secondary">${report.date}</span>
+          <p>${report.customerName}</p>
+          <p>${report.jobscope}</p>
+          <p>${report.countermeasure}</p>
+          <span class="options">
+          <i  id="edit-report" data-bs-toggle="modal" data-bs-target="#form" class="fas fa-edit"></i>
+          <i  id="delete-report" class="fas fa-trash-alt"></i>
+          </span>
+    </div>
+    `;
+    });
+  },
+};
+
+//Action -> Do Something
+//Get elements
+//Setup events
+//format data
+
 //Element
 const form = document.getElementById("form");
 const reportInput = document.getElementById("reportInput");
@@ -8,7 +53,6 @@ const textArea = document.getElementById("textarea");
 const msg = document.getElementById("msg");
 const tasksList = document.getElementById("tasks");
 const addButton = document.getElementById("add");
-const url = "/api/report";
 
 //Event Listeners
 form.addEventListener("submit", (e) => {
@@ -24,60 +68,35 @@ const formValidation = () => {
     msg.style.color = "Red";
     console.log("failure");
   } else {
-    acceptData();
-    console.log("success");
-    msg.innerHTML = " ";
-
-    add.setAttribute("data-bs-dismiss", "modal");
-    add.click();
+    function onAccepthDataSuccess() {
+      console.log("success");
+      msg.innerHTML = " ";
+    }
+    acceptData(onAccepthDataSuccess);
   }
 };
 
-const renderReports = (data) => {
-  data.reports.forEach((report) => {
-    tasksList.innerHTML += `
-     <div id=${report._id}>
-          <span class="fw-bold">${report.reportNo}</span>
-          <span class="small text-secondary">${report.date}</span>
-          <p>${report.customerName}</p>
-          <p>${report.jobscope}</p>
-          <p>${report.countermeasure}</p>
-          <span class="options">
-          <i  id="edit-report" data-bs-toggle="modal" data-bs-target="#form" class="fas fa-edit"></i>
-          <i  id="delete-report" class="fas fa-trash-alt"></i>
-          </span>
-    </div>
-    `;
-    console.log(data);
-  });
-};
+function loadReportList() {
+  //Method:GET
+  reportApi.getReports().then((data) => ui.renderReports(data.reports));
+}
 
-//Method:GET
-fetch(url)
-  .then((res) => res.json())
-  .then((data) => renderReports(data));
+loadReportList();
 
 //Create
 //Method:POST
-const acceptData = () => {
-  fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
+const acceptData = (onSuccess) => {
+  reportApi
+    .addReport({
       reportNo: reportInput.value,
       date: dateInput.value,
       customerName: customerInput.value,
       jobscope: jobInput.value,
       countermeasure: textArea.value,
-    }),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      const dataArr = [];
-      dataArr.push(data);
-      renderReports(dataArr);
+    })
+    .then(() => {
+      onSuccess();
+      loadReportList();
     });
 };
 
@@ -95,7 +114,7 @@ tasksList.addEventListener("click", (e) => {
       method: "DELETE",
     })
       .then((res) => res.json())
-      .then(() => location.reload());
+      .then(() => loadReportList());
   }
 
   if (editButtonIsPressed) {
