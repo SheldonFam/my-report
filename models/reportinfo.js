@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const reportSchema = new mongoose.Schema({
   reportNo: String,
-  date: Date,
+  date: String,
   customerName: String,
   jobscope: String,
   countermeasure: String,
