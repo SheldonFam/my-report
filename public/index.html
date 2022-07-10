@@ -27,7 +27,7 @@
         <span>Add New Report</span>
         <button id="btn-addNew"><i class="fas fa-plus"></i></button>
       </div>
-      <h5 class="text-center my-3">Report</h5>
+      <h5 class="text-center my-3">Report List</h5>
       <!-- Modal -->
       <form
         method="POST"
@@ -41,7 +41,7 @@
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Add New Report</h5>
+              <h5 class="modal-title" id="exampleModalLabel">Report Info</h5>
               <button
                 type="button"
                 class="btn-close"
@@ -95,7 +95,7 @@
               >
                 Close
               </button>
-              <button type="submit" id="add" class="btn btn-primary">
+              <button type="submit" id="add_button" class="btn btn-primary">
                 Add
               </button>
             </div>
@@ -104,6 +104,15 @@
       </form>
       <div id="tasks"></div>
     </div>
+    <div class="report hidden">
+      <button class="close-report">&times;</button>
+      <h1>Report</h1>
+      <p>Report Date</p>
+      <p>Customer / Contact Person</p>
+      <p>Purpose Of Visit / JobScope</p>
+      <p>Action Plan/Countermeasure</p>
+    </div>
+    <div class="overlay hidden"></div>
     <script src="script.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"

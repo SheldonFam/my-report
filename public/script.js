@@ -1,4 +1,4 @@
-//Api Calls
+// Api Calls
 const url = "/api/report";
 
 const reportApi = {
@@ -31,6 +31,7 @@ const ui = {
           <span class="options">
           <i  id="edit-report" data-bs-toggle="modal" data-bs-target="#form" class="fas fa-edit"></i>
           <i  id="delete-report" class="fas fa-trash-alt"></i>
+          <button onClick="openReport()" class="open-report" >View</button>
           </span>
     </div>
     `;
@@ -39,11 +40,8 @@ const ui = {
 };
 
 //Action -> Do Something
-//Get elements
-//Setup events
-//format data
 
-//Element
+//Get Elements
 const form = document.getElementById("form");
 const reportInput = document.getElementById("reportInput");
 const dateInput = document.getElementById("dateInput");
@@ -52,8 +50,9 @@ const jobInput = document.getElementById("jobInput");
 const textArea = document.getElementById("textarea");
 const msg = document.getElementById("msg");
 const tasksList = document.getElementById("tasks");
-const addButton = document.getElementById("add");
+const addButton = document.getElementById("add_button");
 
+//Setup events
 //Event Listeners
 form.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -61,7 +60,7 @@ form.addEventListener("submit", (e) => {
   resetForm();
 });
 
-//Function
+// //Function
 const formValidation = () => {
   if (reportInput.value === "") {
     msg.innerHTML = "Report No cannot be empty!";
@@ -102,10 +101,11 @@ const acceptData = (onSuccess) => {
 
 tasksList.addEventListener("click", (e) => {
   e.preventDefault();
-
+  console.log(tasksList);
   let editButtonIsPressed = e.target.id == "edit-report";
   let deleteButtonIsPressed = e.target.id == "delete-report";
   let id = e.target.parentElement.parentElement.id;
+  console.log(id);
 
   //Delete-Remove the existing post
   //Method:DELETE
@@ -119,6 +119,7 @@ tasksList.addEventListener("click", (e) => {
 
   if (editButtonIsPressed) {
     let selectedTask = e.target.parentElement.parentElement;
+    console.log(selectedTask);
     reportInput.value = selectedTask.children[0].innerHTML;
     dateInput.value = selectedTask.children[1].innerHTML;
     customerInput.value = selectedTask.children[2].innerHTML;
@@ -130,6 +131,7 @@ tasksList.addEventListener("click", (e) => {
   //Method:PATCH
   addButton.addEventListener("click", (e) => {
     e.preventDefault();
+
     fetch(`${url}/${id}`, {
       method: "PATCH",
       headers: {
@@ -155,3 +157,26 @@ const resetForm = () => {
   jobInput.value = "";
   textArea.value = "";
 };
+
+//When viewButton is pressed
+const report = document.querySelector(".report");
+const overlay = document.querySelector(".overlay");
+const btnCloseModal = document.querySelector(".close-report");
+
+const openReport = () => {
+  report.classList.remove("hidden");
+  overlay.classList.remove("hidden");
+};
+
+const closeReport = () => {
+  report.classList.add("hidden");
+  overlay.classList.add("hidden");
+};
+
+btnCloseModal.addEventListener("click", closeReport);
+
+//TodoList!!!
+//1)Modal will dismiss after submit data.
+//2)After viewButton is pressed, open modal and show report data.
+//3)Only show date,edit button,delete button and view button after
+//  user success submit data.
