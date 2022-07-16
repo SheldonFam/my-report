@@ -31,7 +31,7 @@ const ui = {
           <span class="options">
           <i  id="edit-report" data-bs-toggle="modal" data-bs-target="#form" class="fas fa-edit"></i>
           <i  id="delete-report" class="fas fa-trash-alt"></i>
-          <button onClick="openReport()" class="open-report" >View</button>
+          <button onClick="openReport()" class="view_report"  id="view-report" >View</button>
           </span>
     </div>
     `;
@@ -47,16 +47,19 @@ const reportInput = document.getElementById("reportInput");
 const dateInput = document.getElementById("dateInput");
 const customerInput = document.getElementById("customerInput");
 const jobInput = document.getElementById("jobInput");
-const textArea = document.getElementById("textarea");
+const actionInput = document.getElementById("actionInput");
 const msg = document.getElementById("msg");
 const tasksList = document.getElementById("tasks");
-const addButton = document.getElementById("add_button");
+const addButton = document.getElementById("add_button"); // not use??
+const saveButton = document.getElementById("save_button");
 
 //Setup events
 //Event Listeners
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
+//When user press add button after submit data
+form.addEventListener("submit", (events) => {
+  events.preventDefault();
   formValidation();
+
   resetForm();
 });
 
@@ -70,13 +73,14 @@ const formValidation = () => {
     function onAccepthDataSuccess() {
       console.log("success");
       msg.innerHTML = " ";
+      $("#form").modal("hide");
     }
     acceptData(onAccepthDataSuccess);
   }
 };
 
+//Method:GET
 function loadReportList() {
-  //Method:GET
   reportApi.getReports().then((data) => ui.renderReports(data.reports));
 }
 
@@ -91,7 +95,7 @@ const acceptData = (onSuccess) => {
       date: dateInput.value,
       customerName: customerInput.value,
       jobscope: jobInput.value,
-      countermeasure: textArea.value,
+      countermeasure: actionInput.value,
     })
     .then(() => {
       onSuccess();
@@ -99,13 +103,17 @@ const acceptData = (onSuccess) => {
     });
 };
 
+// Inside the small task , icon and function
 tasksList.addEventListener("click", (e) => {
   e.preventDefault();
-  console.log(tasksList);
+
   let editButtonIsPressed = e.target.id == "edit-report";
+
   let deleteButtonIsPressed = e.target.id == "delete-report";
+
+  let viewReportButton = e.target.id == "view-report";
+
   let id = e.target.parentElement.parentElement.id;
-  console.log(id);
 
   //Delete-Remove the existing post
   //Method:DELETE
@@ -118,20 +126,56 @@ tasksList.addEventListener("click", (e) => {
   }
 
   if (editButtonIsPressed) {
+    $("#add_button").hide();
+    $("#save_button").show();
     let selectedTask = e.target.parentElement.parentElement;
-    console.log(selectedTask);
     reportInput.value = selectedTask.children[0].innerHTML;
     dateInput.value = selectedTask.children[1].innerHTML;
     customerInput.value = selectedTask.children[2].innerHTML;
     jobInput.value = selectedTask.children[3].innerHTML;
-    textArea.value = selectedTask.children[4].innerHTML;
+    actionInput.value = selectedTask.children[4].innerHTML;
+  }
+
+  if (viewReportButton) {
+    fetch(`${url}/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => showData(data.report));
+
+    const showData = (report) => {
+      const viewReport = document.querySelector(".report");
+      viewReport.innerHTML = `
+        <table class="table"  ${report._id}  >
+        <thead>
+          <tr>
+            <th>Report Date</th>
+            <th>Customer / Contact Person</th>
+            <th>Purpose Of Visit / JobScope</th>
+            <th>Action Plan/Countermeasure</th>
+          </tr>
+           </thead>
+           <tbody>
+          <tr>
+            <td>${report.date}</td>
+            <td>${report.customerName}</td>
+            <td>${report.jobscope}</td>
+             <td>${report.countermeasure} </td>
+          </tr>
+           </tbody>
+        </table>
+          <button onClick="closeReport()" class="close-report" >&times;</button>
+     `;
+    };
   }
 
   //Update
   //Method:PATCH
-  addButton.addEventListener("click", (e) => {
-    e.preventDefault();
-
+  saveButton.addEventListener("click", (events) => {
+    events.preventDefault();
     fetch(`${url}/${id}`, {
       method: "PATCH",
       headers: {
@@ -142,41 +186,49 @@ tasksList.addEventListener("click", (e) => {
         date: dateInput.value,
         customerName: customerInput.value,
         jobscope: jobInput.value,
-        countermeasure: textArea.value,
+        countermeasure: actionInput.value,
       }),
     })
       .then((res) => res.json())
       .then(() => location.reload());
+    $("#form").modal("hide");
   });
 });
 
+//After submit data, dismiss modal and show addbutton
+form.addEventListener("hidden.bs.modal", function () {
+  resetForm();
+  msg.innerHTML = " ";
+  $("#add_button").show();
+  $("#save_button").hide();
+});
+
+//When create new report is pressed, hide save button
+form.addEventListener("show.bs.modal", function () {
+  $("#save_button").hide();
+});
+
+//Reset the form
 const resetForm = () => {
   reportInput.value = "";
   dateInput.value = "";
   customerInput.value = "";
   jobInput.value = "";
-  textArea.value = "";
+  actionInput.value = "";
 };
 
+//To view report
 //When viewButton is pressed
-const report = document.querySelector(".report");
+const reportModal = document.querySelector(".report");
 const overlay = document.querySelector(".overlay");
-const btnCloseModal = document.querySelector(".close-report");
 
 const openReport = () => {
-  report.classList.remove("hidden");
+  reportModal.classList.remove("hidden");
   overlay.classList.remove("hidden");
 };
 
+//Close viewReport
 const closeReport = () => {
-  report.classList.add("hidden");
+  reportModal.classList.add("hidden");
   overlay.classList.add("hidden");
 };
-
-btnCloseModal.addEventListener("click", closeReport);
-
-//TodoList!!!
-//1)Modal will dismiss after submit data.
-//2)After viewButton is pressed, open modal and show report data.
-//3)Only show date,edit button,delete button and view button after
-//  user success submit data.
