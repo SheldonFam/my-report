@@ -26,9 +26,9 @@
   <body>
     <div class="app">
       <h4 class="mb-3 text-center">Report App</h4>
-      <div id="addNew" data-bs-toggle="modal" data-bs-target="#form">
+      <div id="createNewReport" data-bs-toggle="modal" data-bs-target="#form">
         <span>Create New Report</span>
-        <button id="btn-addNew"><i class="fas fa-plus"></i></button>
+        <button class="btn_createReport"><i class="fas fa-plus"></i></button>
       </div>
       <h5 class="text-center my-3">Report List</h5>
       <!-- Modal -->
@@ -98,17 +98,17 @@
               >
                 Close
               </button>
-              <button type="submit" id="add_button" class="btn btn-primary">
+              <button type="submit" id="btn-add" class="btn btn-primary">
                 Add
               </button>
-              <button type="submit" id="save_button" class="btn btn-primary">
+              <button onClick="saveReport()" type="" class="btn-save">
                 Save
               </button>
             </div>
           </div>
         </div>
       </form>
-      <div id="tasks"></div>
+      <div id="tasks" class="report-container"></div>
     </div>
     <div class="report hidden"></div>
     <div class="overlay hidden"></div>

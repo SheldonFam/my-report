@@ -21,12 +21,13 @@ body {
   overflow-y: scroll;
 }
 
+/*Scroll report without scrollbar*/
 .app::-webkit-scrollbar {
   width: 0 !important;
 }
 
 /*Span newTask position setting and styling*/
-#addNew {
+#createNewReport {
   background-color: #e0ffff;
   display: flex;
   align-items: center;
@@ -35,6 +36,7 @@ body {
   border-radius: 5px;
 }
 
+/*create new report button*/
 .fa-plus {
   background-color: white;
   padding: 3px;
@@ -112,7 +114,6 @@ body {
 .table {
   border-collapse: collapse;
   margin: 25px 0;
-  font-size: 0.9em;
   min-width: 400px;
 }
 
@@ -123,7 +124,10 @@ body {
   font-weight: bold;
 }
 
-.table th,
+.table th {
+  font-size: 12px;
+}
+
 .table td {
   padding: 12px 15px;
   border-width: 1px;
@@ -132,3 +136,60 @@ body {
 /* .table tbody tr {
   border-bottom: 1px solid #dddddd;
 }  */
+
+/*refer to todolist project setting*/
+/* .report-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} 
+
+.report-list {
+  list-style: none;
+  min-width: 30%;
+  padding: 10px 10px;
+}
+
+.singlereport {
+  margin: 12px 10px;
+  border: 1px solid black;
+  background-color: white;
+  color: black;
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.5s ease;
+}
+
+.singlereport li {
+  flex: 1;
+}
+
+.btn-edit,
+.btn-delete {
+  background: #ff6f47;
+  color: white;
+  border: none;
+  padding: 1rem;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.report-item {
+  padding: 0rem 0.5rem;
+}
+
+.btn-edit {
+  background: green;
+}*/
+
+/* .fall {
+  transform: translateY(8rem) rotateZ(20deg);
+  opacity: 0;
+} */
+
+.fa-edit,
+.fa-trash-alt {
+  pointer-events: none;
+}
