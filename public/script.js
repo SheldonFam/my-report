@@ -101,9 +101,12 @@ const acceptData = (onSuccess) => {
     });
 };
 
+//When editReport button is pressed
 function editReport(event) {
   $("#btn-add").hide();
-  $(".btn-save").show();
+  $("#btn-save").show();
+  let id = event.target.parentElement.parentElement.id;
+  console.log(id);
   let selecteditem = event.target.parentElement.parentElement;
   reportInput.value = selecteditem.children[0].innerHTML;
   dateInput.value = selecteditem.children[1].innerHTML;
@@ -112,6 +115,7 @@ function editReport(event) {
   actionInput.value = selecteditem.children[4].innerHTML;
 }
 
+//When deleteReport button is pressed
 function deleteReport(event) {
   let id = event.target.parentElement.parentElement.id;
   fetch(`${url}/${id}`, {
@@ -121,10 +125,12 @@ function deleteReport(event) {
     .then(() => loadReportList());
 }
 
+//When viewReport button is pressed
 function viewReport(event) {
   reportModal.classList.remove("hidden");
   overlay.classList.remove("hidden");
   let id = event.target.parentElement.parentElement.id;
+  console.log(id);
   fetch(`${url}/${id}`, {
     method: "GET",
     headers: {
@@ -161,43 +167,44 @@ const showData = (report) => {
      `;
 };
 
+const reportList = document.querySelector(".report-container");
+
 //Update
 //Method:PATCH
-const saveButton = document.querySelector(".btn-save");
-console.log(saveButton);
+const saveButton = document.querySelector("#btn-save");
 
-function saveReport() {
+function saveReport(event) {
   console.log("save");
+  let id = event.target.parentElement.parentElement.id;
+  fetch(`${url}/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      reportNo: reportInput.value,
+      date: dateInput.value,
+      customerName: customerInput.value,
+      jobscope: jobInput.value,
+      countermeasure: actionInput.value,
+    }),
+  })
+    .then((res) => res.json())
+    .then(() => location.reload());
+  $("#form").modal("hide");
 }
-
-// fetch(`${url}/${id}`, {
-//   method: "PATCH",
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-//   body: JSON.stringify({
-//     reportNo: reportInput.value,
-//     date: dateInput.value,
-//     customerName: customerInput.value,
-//     jobscope: jobInput.value,
-//     countermeasure: actionInput.value,
-//   }),
-// })
-//   .then((res) => res.json())
-//   .then(() => location.reload());
-// $("#form").modal("hide");
 
 //After submit data, dismiss modal and show addbutton
 form.addEventListener("hidden.bs.modal", function () {
   resetForm();
   msg.innerHTML = " ";
   $("#btn-add").show();
-  $(".btn-save").hide();
+  $("#btn-save").hide();
 });
 
-//When create new report is pressed, hide save button
+//When create new report section is pressed, hide save button
 form.addEventListener("show.bs.modal", function () {
-  $(".btn-save").hide();
+  $("#btn-save").hide();
 });
 
 //Reset the form
@@ -209,8 +216,7 @@ const resetForm = () => {
   actionInput.value = "";
 };
 
-//To view report
-//When viewButton is pressed
+//Define function for view-report button
 const reportModal = document.querySelector(".report");
 const overlay = document.querySelector(".overlay");
 
