@@ -43,30 +43,18 @@ body {
   border-radius: 3px;
 }
 
-/*Task position setting*/
-#tasks {
-  display: grid;
-  gap: 30px;
-}
-
 /*Every single Task position setting and styling*/
 #tasks div {
   border: 2px solid black;
   border-radius: 12px;
-  padding: 10px;
-  display: grid;
-  gap: 4px;
-}
-
-/*Edit and delete button icon position */
-.options {
-  justify-self: center;
   display: flex;
-  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  margin: 8px;
 }
 
-.options i {
-  cursor: pointer;
+#tasks p {
+  margin-bottom: 0;
 }
 
 /* Close icon in viewReport */
@@ -111,6 +99,7 @@ body {
   z-index: 5;
 }
 
+/*Table styling*/
 .table {
   border-collapse: collapse;
   margin: 25px 0;
@@ -132,10 +121,6 @@ body {
   padding: 12px 15px;
   border-width: 1px;
 }
-
-/* .table tbody tr {
-  border-bottom: 1px solid #dddddd;
-}  */
 
 /*refer to todolist project setting*/
 /* .report-container {
@@ -166,30 +151,39 @@ body {
   flex: 1;
 }
 
-.btn-edit,
-.btn-delete {
-  background: #ff6f47;
-  color: white;
-  border: none;
-  padding: 1rem;
-  cursor: pointer;
-  font-size: 1rem;
-}
+
 
 .report-item {
   padding: 0rem 0.5rem;
 }
-
-.btn-edit {
-  background: green;
-}*/
 
 /* .fall {
   transform: translateY(8rem) rotateZ(20deg);
   opacity: 0;
 } */
 
+.btn-delete {
+  background: #ff6f47;
+  color: white;
+  border: none;
+  padding: 1rem;
+  font-size: 1rem;
+}
+
+.btn-edit {
+  background: green;
+  color: white;
+  border: none;
+  padding: 1rem;
+  font-size: 1rem;
+}
+
 .fa-edit,
 .fa-trash-alt {
   pointer-events: none;
+}
+
+/*to hide the report id*/
+.reportID {
+  display: none;
 }
