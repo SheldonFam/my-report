@@ -22,17 +22,12 @@ const ui = {
     tasksList.innerHTML = "";
     reports.forEach((report) => {
       tasksList.innerHTML += `
-     <div id=${report._id}>
-      <span class="fw-bold">${report.reportNo}</span>
-      <span class="small text-secondary">${report.date}</span>
-      <p>${report.customerName}</p>
-      <p>${report.jobscope}</p>
-      <p>${report.countermeasure}</p>
-      <span class="options">
-          <button onClick="editReport(event)" class="btn-edit" data-bs-toggle="modal" data-bs-target="#form"><i class="fas fa-edit"></i></button>
-          <button onClick="deleteReport(event)" class="btn-delete"  ><i class="fas fa-trash-alt"></i></button>
-          <button onClick="viewReport(event)" class="btn-view">View</button>
-          </span>
+     <div >
+      <p id="number" class=reportID>${report._id}</p>
+      <p class="fw-bold">${report.date}</p>
+      <button onClick="editReport(event)" class="btn-edit" data-bs-toggle="modal" data-bs-target="#form"><i class="fas fa-edit"></i></button>
+      <button onClick="deleteReport()" class="btn-delete"  ><i class="fas fa-trash-alt"></i></button>
+      <button onClick="viewReport()" class="btn-view">View</button>
     </div>
     `;
     });
@@ -51,6 +46,7 @@ const actionInput = document.getElementById("actionInput");
 const msg = document.getElementById("msg");
 const tasksList = document.getElementById("tasks");
 const addButton = document.getElementById("btn-add");
+const saveButton = document.querySelector("#btn-save");
 
 //Setup events
 //Event Listeners
@@ -105,19 +101,19 @@ const acceptData = (onSuccess) => {
 function editReport(event) {
   $("#btn-add").hide();
   $("#btn-save").show();
-  let id = event.target.parentElement.parentElement.id;
+  let id = document.getElementById("number").innerHTML;
   console.log(id);
-  let selecteditem = event.target.parentElement.parentElement;
-  reportInput.value = selecteditem.children[0].innerHTML;
-  dateInput.value = selecteditem.children[1].innerHTML;
-  customerInput.value = selecteditem.children[2].innerHTML;
-  jobInput.value = selecteditem.children[3].innerHTML;
-  actionInput.value = selecteditem.children[4].innerHTML;
+  reportInput.value = document.getElementById("report-No").innerHTML;
+  dateInput.value = document.getElementById("date").innerHTML;
+  customerInput.value = document.getElementById("customer").innerHTML;
+  jobInput.value = document.getElementById("job").innerHTML;
+  actionInput.value = document.getElementById("plan").innerHTML;
 }
 
 //When deleteReport button is pressed
-function deleteReport(event) {
-  let id = event.target.parentElement.parentElement.id;
+function deleteReport() {
+  let id = document.getElementById("number").innerHTML;
+  console.log(id);
   fetch(`${url}/${id}`, {
     method: "DELETE",
   })
@@ -126,10 +122,10 @@ function deleteReport(event) {
 }
 
 //When viewReport button is pressed
-function viewReport(event) {
+function viewReport() {
   reportModal.classList.remove("hidden");
   overlay.classList.remove("hidden");
-  let id = event.target.parentElement.parentElement.id;
+  let id = document.getElementById("number").innerHTML;
   console.log(id);
   fetch(`${url}/${id}`, {
     method: "GET",
@@ -144,8 +140,8 @@ function viewReport(event) {
 const showData = (report) => {
   const viewReport = document.querySelector(".report");
   viewReport.innerHTML = `
-        <table class="table"  ${report._id}  >
-        <h3>${report.reportNo}</h3>
+        <table class="table" ${report._id}  >
+        <h3 id="report-No">${report.reportNo}</h3>
         <thead>
           <tr>
             <th>Report Date</th>
@@ -156,10 +152,10 @@ const showData = (report) => {
            </thead>
            <tbody>
           <tr>
-            <td>${report.date}</td>
-            <td>${report.customerName}</td>
-            <td>${report.jobscope}</td>
-             <td>${report.countermeasure} </td>
+            <td id="date">${report.date}</td>
+            <td id="customer">${report.customerName}</td>
+            <td id="job">${report.jobscope}</td>
+             <td id="plan">${report.countermeasure} </td>
           </tr>
            </tbody>
         </table>
@@ -167,15 +163,13 @@ const showData = (report) => {
      `;
 };
 
-const reportList = document.querySelector(".report-container");
-
 //Update
 //Method:PATCH
-const saveButton = document.querySelector("#btn-save");
 
-function saveReport(event) {
+function saveReport() {
   console.log("save");
-  let id = event.target.parentElement.parentElement.id;
+  let id = document.getElementById("number").innerHTML;
+  console.log(id);
   fetch(`${url}/${id}`, {
     method: "PATCH",
     headers: {
