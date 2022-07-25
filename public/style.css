@@ -50,7 +50,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 8px;
+  margin-bottom: 12px;
 }
 
 #tasks p {
@@ -122,59 +122,29 @@ body {
   border-width: 1px;
 }
 
-/*refer to todolist project setting*/
-/* .report-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-} 
-
-.report-list {
-  list-style: none;
-  min-width: 30%;
-  padding: 10px 10px;
-}
-
-.singlereport {
-  margin: 12px 10px;
-  border: 1px solid black;
-  background-color: white;
-  color: black;
-  font-size: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: all 0.5s ease;
-}
-
-.singlereport li {
-  flex: 1;
-}
-
-
-
-.report-item {
-  padding: 0rem 0.5rem;
-}
-
-/* .fall {
-  transform: translateY(8rem) rotateZ(20deg);
-  opacity: 0;
-} */
-
 .btn-delete {
-  background: #ff6f47;
-  color: white;
+  color: red;
+  background-color: white;
   border: none;
-  padding: 1rem;
+  border-radius: 12px;
+  margin: 6px;
   font-size: 1rem;
 }
 
 .btn-edit {
-  background: green;
-  color: white;
+  color: orange;
+  background-color: white;
   border: none;
-  padding: 1rem;
+  border-radius: 12px;
+  margin: 6px;
+  font-size: 1rem;
+}
+
+.btn-view {
+  border: none;
+
+  padding: 4px;
+  margin: 6px;
   font-size: 1rem;
 }
 
@@ -183,7 +153,12 @@ body {
   pointer-events: none;
 }
 
-/*to hide the report id*/
-.reportID {
-  display: none;
+.option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.container p {
+  padding: 12px;
 }
