@@ -22,13 +22,14 @@ const ui = {
     tasksList.innerHTML = "";
     reports.forEach((report) => {
       tasksList.innerHTML += `
-     <div >
-      <p id="number" class=reportID>${report._id}</p>
+     <div class="container">
       <p class="fw-bold">${report.date}</p>
-      <button onClick="editReport(event)" class="btn-edit" data-bs-toggle="modal" data-bs-target="#form"><i class="fas fa-edit"></i></button>
-      <button onClick="deleteReport()" class="btn-delete"  ><i class="fas fa-trash-alt"></i></button>
-      <button onClick="viewReport()" class="btn-view">View</button>
+      <span class="option">
+      <button  onClick="editDataCall('${report._id}')" class="btn-edit" data-bs-toggle="modal" data-bs-target="#form"><i class="fas fa-edit"></i></button>
+      <button  onClick="deleteReport('${report._id}')" class="btn-delete"  ><i class="fas fa-trash-alt"></i></button>
+      <button  onClick="viewReport('${report._id}')" class="btn-view">View</button>
     </div>
+    </span>
     `;
     });
   },
@@ -97,23 +98,70 @@ const acceptData = (onSuccess) => {
     });
 };
 
-//When editReport button is pressed
-function editReport(event) {
+//Reset the form
+const resetForm = () => {
+  reportInput.value = "";
+  dateInput.value = "";
+  customerInput.value = "";
+  jobInput.value = "";
+  actionInput.value = "";
+};
+
+let editFormData;
+
+function setFormData(reportNo, date, customerName, jobscope, countermeasure) {
+  reportInput.value = reportNo;
+  dateInput.value = date;
+  customerInput.value = customerName;
+  jobInput.value = jobscope;
+  actionInput.value = countermeasure;
+}
+
+function editDataCall(id) {
   $("#btn-add").hide();
   $("#btn-save").show();
-  let id = document.getElementById("number").innerHTML;
-  console.log(id);
-  reportInput.value = document.getElementById("report-No").innerHTML;
-  dateInput.value = document.getElementById("date").innerHTML;
-  customerInput.value = document.getElementById("customer").innerHTML;
-  jobInput.value = document.getElementById("job").innerHTML;
-  actionInput.value = document.getElementById("plan").innerHTML;
+
+  console.log("editbutton");
+  fetch(`${url}/${id}`, {
+    method: "GET",
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("edit info", data.report);
+      editFormData = data.report;
+      setFormData(
+        editFormData.reportNo,
+        editFormData.date,
+        editFormData.customerName,
+        editFormData.jobscope,
+        editFormData.countermeasure
+      );
+    });
+}
+
+//Update
+//Method:PATCH
+function saveReport() {
+  console.log("save");
+  let id = editFormData._id;
+  fetch(`${url}/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      reportNo: reportInput.value,
+      date: dateInput.value,
+      customerName: customerInput.value,
+      jobscope: jobInput.value,
+      countermeasure: actionInput.value,
+    }),
+  }).then((res) => res.json());
+  $("#form").modal("hide");
 }
 
 //When deleteReport button is pressed
-function deleteReport() {
-  let id = document.getElementById("number").innerHTML;
-  console.log(id);
+function deleteReport(id) {
   fetch(`${url}/${id}`, {
     method: "DELETE",
   })
@@ -122,11 +170,9 @@ function deleteReport() {
 }
 
 //When viewReport button is pressed
-function viewReport() {
+function viewReport(id) {
   reportModal.classList.remove("hidden");
   overlay.classList.remove("hidden");
-  let id = document.getElementById("number").innerHTML;
-  console.log(id);
   fetch(`${url}/${id}`, {
     method: "GET",
     headers: {
@@ -140,7 +186,7 @@ function viewReport() {
 const showData = (report) => {
   const viewReport = document.querySelector(".report");
   viewReport.innerHTML = `
-        <table class="table" ${report._id}  >
+        <table class="table">
         <h3 id="report-No">${report.reportNo}</h3>
         <thead>
           <tr>
@@ -155,38 +201,13 @@ const showData = (report) => {
             <td id="date">${report.date}</td>
             <td id="customer">${report.customerName}</td>
             <td id="job">${report.jobscope}</td>
-             <td id="plan">${report.countermeasure} </td>
+            <td id="plan">${report.countermeasure} </td>
           </tr>
            </tbody>
         </table>
           <button onClick="closeReport()" class="close-report" >&times;</button>
      `;
 };
-
-//Update
-//Method:PATCH
-
-function saveReport() {
-  console.log("save");
-  let id = document.getElementById("number").innerHTML;
-  console.log(id);
-  fetch(`${url}/${id}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      reportNo: reportInput.value,
-      date: dateInput.value,
-      customerName: customerInput.value,
-      jobscope: jobInput.value,
-      countermeasure: actionInput.value,
-    }),
-  })
-    .then((res) => res.json())
-    .then(() => location.reload());
-  $("#form").modal("hide");
-}
 
 //After submit data, dismiss modal and show addbutton
 form.addEventListener("hidden.bs.modal", function () {
@@ -200,15 +221,6 @@ form.addEventListener("hidden.bs.modal", function () {
 form.addEventListener("show.bs.modal", function () {
   $("#btn-save").hide();
 });
-
-//Reset the form
-const resetForm = () => {
-  reportInput.value = "";
-  dateInput.value = "";
-  customerInput.value = "";
-  jobInput.value = "";
-  actionInput.value = "";
-};
 
 //Define function for view-report button
 const reportModal = document.querySelector(".report");
