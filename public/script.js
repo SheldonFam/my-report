@@ -109,7 +109,7 @@ const resetForm = () => {
 
 let editFormData;
 
-function setFormData(reportNo, date, customerName, jobscope, countermeasure) {
+function getFormData(reportNo, date, customerName, jobscope, countermeasure) {
   reportInput.value = reportNo;
   dateInput.value = date;
   customerInput.value = customerName;
@@ -120,16 +120,13 @@ function setFormData(reportNo, date, customerName, jobscope, countermeasure) {
 function editDataCall(id) {
   $("#btn-add").hide();
   $("#btn-save").show();
-
-  console.log("editbutton");
   fetch(`${url}/${id}`, {
     method: "GET",
   })
     .then((res) => res.json())
     .then((data) => {
-      console.log("edit info", data.report);
       editFormData = data.report;
-      setFormData(
+      getFormData(
         editFormData.reportNo,
         editFormData.date,
         editFormData.customerName,
@@ -142,7 +139,6 @@ function editDataCall(id) {
 //Update
 //Method:PATCH
 function saveReport() {
-  console.log("save");
   let id = editFormData._id;
   fetch(`${url}/${id}`, {
     method: "PATCH",
@@ -156,17 +152,21 @@ function saveReport() {
       jobscope: jobInput.value,
       countermeasure: actionInput.value,
     }),
-  }).then((res) => res.json());
+  })
+    .then((res) => res.json())
+    .then(() => loadReportList());
   $("#form").modal("hide");
 }
 
 //When deleteReport button is pressed
 function deleteReport(id) {
-  fetch(`${url}/${id}`, {
-    method: "DELETE",
-  })
-    .then((res) => res.json())
-    .then(() => loadReportList());
+  if (confirm("Are you sure you want to delete?") == true) {
+    fetch(`${url}/${id}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then(() => loadReportList());
+  }
 }
 
 //When viewReport button is pressed
