@@ -25,7 +25,7 @@ const ui = {
      <div class="container">
       <p class="fw-bold">${report.date}</p>
       <span class="option">
-      <button  onClick="editDataCall('${report._id}')" class="btn-edit" data-bs-toggle="modal" data-bs-target="#form"><i class="fas fa-edit"></i></button>
+      <button  onClick="editReportData('${report._id}')" class="btn-edit" data-bs-toggle="modal" data-bs-target="#form"><i class="fas fa-edit"></i></button>
       <button  onClick="deleteReport('${report._id}')" class="btn-delete"  ><i class="fas fa-trash-alt"></i></button>
       <button  onClick="viewReport('${report._id}')" class="btn-view">View</button>
     </div>
@@ -117,7 +117,7 @@ function getFormData(reportNo, date, customerName, jobscope, countermeasure) {
   actionInput.value = countermeasure;
 }
 
-function editDataCall(id) {
+function editReportData(id) {
   $("#btn-add").hide();
   $("#btn-save").show();
   fetch(`${url}/${id}`, {
