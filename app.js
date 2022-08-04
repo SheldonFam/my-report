@@ -4,13 +4,15 @@ const routes = require("./routes/routes");
 const connectDB = require("./mongodb/connect");
 const reportinfo = require("./models/reportinfo");
 const bodyParser = require("body-parser");
-
+const path=require("path")
+const staticPath=path.join(__dirname,"./public")
 require("dotenv").config();
+
 
 //middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static("./public"));
+app.use(express.static(staticPath));
 
 app.use("/api/report", routes);
 
